@@ -1,8 +1,13 @@
 type Query {
+  homes: [Home!]!
   users: [User!]!
   user(id: ID!): User
   posts: [Post!]!
   post(id: ID!): Post
+}
+
+type Home {
+  name: String!
 }
 
 type User {

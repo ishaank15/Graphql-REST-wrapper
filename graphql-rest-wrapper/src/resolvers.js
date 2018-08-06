@@ -1,9 +1,17 @@
 const fetch = require('node-fetch')
 
+const Home = require('./home')
 const baseURL = `http://localhost:3000`
+
 
 const resolvers = {
   Query: {
+    homes: () => {
+      // const homes = db.collection('homes')
+      // console.log(homes)
+      return Home.find({})
+    },
+
     users: () => {
       return fetch(`${baseURL}/users`).then(res => res.json())
     },
