@@ -58,5 +58,5 @@ HomeSchema.statics = {
   },
 };
 
-const Home = mongoose.model('Home', HomeSchema);
+const Home = mongoose.model('User', HomeSchema);
 module.exports = Home;
