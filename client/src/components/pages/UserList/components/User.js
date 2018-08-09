@@ -7,9 +7,9 @@ class User extends Component {
       const {index, user} = this.props
       const {name, id} = user
     return (
-        <Row key={index}>
-            <Cell>{id}</Cell>
-            <Cell>{name}</Cell>
+        <Row textAlign="center" key={index}>
+            <Cell collapsing>{id}</Cell>
+            <Cell collapsing>{name}</Cell>
         </Row>
     )
   }

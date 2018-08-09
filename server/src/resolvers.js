@@ -4,10 +4,29 @@ const Users = require('./home')
 // const { withFilter } = require('graphql-subscriptions'); 
 const pubsub = require('./subscriptions');
 
+const usersList = [
+  {
+    id: 1,
+    name: "Sapna"
+  },
+  {
+    id: 2,
+    name: "Ishaank"
+  },
+  {
+    id: 3,
+    name: "Vinay"
+  },
+  {
+    id: 4,
+    name: "Prabal"
+  },
+];
+
 const resolvers = {
   Query: {
     users: () => {
-      return Users.find({})
+    return usersList
     },
 
     user: (parent, {name}) => {

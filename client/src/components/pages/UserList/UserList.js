@@ -1,14 +1,15 @@
 import { Table } from 'semantic-ui-react'
 import User from './components/User'
 import React, { Component } from 'react'
+import gql from 'graphql-tag'
 
 const { Header, Body, HeaderCell, Row} = Table;
 
 class UserList extends Component {
 
-  // componentDidMount() {
-  //   // this._subscribeToNewUsers()
-  // }
+  componentDidMount() {
+    this._subscribeToNewUsers()
+  }
 
   _getUsersToRender(){
     const arr  = this.props.getUsers.users
@@ -18,11 +19,11 @@ class UserList extends Component {
   render() {
     const usersToRender = this._getUsersToRender()
     return (
-      <Table striped singleLine>
+      <Table inverted striped singleLine>
         <Header>
           <Row>
-            <HeaderCell>Id</HeaderCell>
-            <HeaderCell>Name</HeaderCell>
+            <HeaderCell collapsing  textAlign="center">Id</HeaderCell>
+            <HeaderCell collapsing  textAlign="center">Name</HeaderCell>
           </Row>
         </Header>
       <Body>
@@ -30,47 +31,40 @@ class UserList extends Component {
               <User key={user.id} index={index} user={user}/>
             ))}
       </Body>
+      {/* <AddUser/> */}
     </Table>
     )
   }
 
-// _subscribeToNewUsers = () => {
-//     this.props.getUsers.subscribeToMore({
-//       document: gql`
-//         subscription {
-//           userCreated {
-//             name
-//           }
-//         }
-//       `,
+_subscribeToNewUsers = () => {
+    this.props.getUsers.subscribeToMore({
+      document: gql`
+        subscription {
+          userCreated {
+            id
+            name
+          }
+        }
+      `,
 
-//       updateQuery: (previous, { subscriptionData }) => {
-//         console.log('previous', previous)
-//         console.log('subscriptionData', subscriptionData)
-//         if (!subscriptionData.data) {
-//           return previous;
-//         }
-        
-//         // if(subscriptionData.data) {
-//         //   const newAllLinks = [
-//         //     subscriptionData.data.newLink.node,
-//         //     ...previous.feed.links,
-//         //   ] ;
-//         //   const result = {
-//         //     ...previous,
-//         //     feed: {
-//         //       ...previous.feed,
-//         //       ...previous.postedBy,
-//         //       ...previous.votes,
-//         //       links: newAllLinks,
-//         //     }
-//         //   }
-//         //   return result
-//         // }
-//       }
-//     })
-//   }
-
+      updateQuery: (previous, { subscriptionData }) => {
+        if (!subscriptionData.data) {
+          return previous;
+        }
+        const newUser = {
+          ...subscriptionData.data.userCreated,
+          'Symbol(id)':`User:${subscriptionData.data.userCreated.id}`
+        }
+        const newObj = {
+          users: [
+            ...previous.users,
+            newUser
+          ]
+        }
+        return newObj;
+      }
+    })
+  }
 }
 
 export default UserList;

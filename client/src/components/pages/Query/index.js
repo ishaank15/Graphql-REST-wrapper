@@ -1,12 +1,18 @@
 // 1
 import gql from 'graphql-tag'
 
- const GET_USERS = gql`
+ export const GET_USERS = gql`
   query {
-   users{
+    users{
       id
       name
-  }
-}
-`
-export default GET_USERS
+    }
+  }`
+
+export const ADD_USER = gql`
+  mutation AddUser($name: String!) {
+    addUser(name: $name) {
+      name
+      id
+    }
+  }`
