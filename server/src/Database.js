@@ -30,7 +30,7 @@ class Database {
       });
 
       mongoose.connection.on('error', () => {
-        throw new Error(`unable to connect to database: ${mongoUri}`);
+        return reject(`Unable to connect to database: ${mongoUri}`);
       });
 
     });

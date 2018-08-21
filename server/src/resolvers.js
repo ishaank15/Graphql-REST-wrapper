@@ -1,49 +1,36 @@
 const fetch = require('node-fetch')
 
-const Users = require('./home')
+const Users = require('./user')
 // const { withFilter } = require('graphql-subscriptions'); 
 const pubsub = require('./subscriptions');
-
-const usersList = [
-  {
-    id: 1,
-    name: "Sapna"
-  },
-  {
-    id: 2,
-    name: "Ishaank"
-  },
-  {
-    id: 3,
-    name: "Vinay"
-  },
-  {
-    id: 4,
-    name: "Prabal"
-  },
-];
 
 const resolvers = {
   Query: {
     users: () => {
-    return usersList
+      return Users.find({});
     },
 
     user: (parent, {name}) => {
       return Users.find({name})
     },
+
+    getUserByName: (parent, {name}) => {
+      return Users.find({name})
+    }
   },
 
   Mutation: {
-    createUser: async (parent, args, { pubsub }) => {
-      const body = {name: args.name}
-      const res =  await fetch('http://192.168.1.188:9000/api/user/create', { 
-        method: 'POST',
-        body:    JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' },
-      })
+    createUser: async (parent, args) => {
+        const { name } = args;
+        Users.insertMany({name: name})
+      // const body = {name: args.name}
+      // const res =  await fetch('http://192.168.1.188:9000/api/user/create', { 
+      //   method: 'POST',
+      //   body:    JSON.stringify(body),
+      //   headers: { 'Content-Type': 'application/json' },
+      // })
 
-      const { data } = await res.json();
+      // const { data } = await res.json();
       pubsub.publish("userCreated", { userCreated: args }); // trigger a change to all subscriptions to this person
       return args;
 
@@ -59,7 +46,7 @@ const resolvers = {
       //   return payload.userCreated.name;
       // })
 
-      subscribe: (parent, args, { pubsub }) => {
+      subscribe: (parent, args) => {
         return pubsub.asyncIterator('userCreated')
       },
     }

@@ -1,6 +1,9 @@
+
+const typeDefs = gql`
 type Query {
   users: [User!]!
   user(name: String!): [User!]!
+  getUserByName(name: String!): [User!]!
 }
 
 type Mutation {
@@ -15,3 +18,4 @@ type User {
   id: ID!
   name: String!
 }
+`;
